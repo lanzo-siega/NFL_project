@@ -29,7 +29,7 @@ class OverthecapSpider(scrapy.Spider):
                 'PercentGuaranteed' : item[7]
                 }
     
-                #yield or give the scraped info to scrapy
+            
             yield scraped_info
             
            
