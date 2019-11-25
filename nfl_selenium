@@ -1,0 +1,22 @@
+from selenium import webdriver
+
+driver = webdriver.Chrome("chromedriver")
+driver.implicitly_wait(100)
+
+driver.get('http://www.nfl.com/stats/weeklyleaders')
+end = pd.read_html(driver.find_element_by_id("stats-gsisweeklyleaders").get_attribute('outerHTML'))[0]
+page_no = range(1,10)
+positions = ['QUARTERBACK', 'RUNNING_BACK', 'WIDE_RECEIVER', 'TIGHT_END', 'DEFENSIVE_LINEMAN', 'LINEBACKER', 'DEFENSIVE_BACK', 'KICKOFF_KICKER', 'PUNTER', 'FIELD_GOAL_KICKER']
+check = {}
+
+for n in positions:
+    testing = '{}page'.format(n)
+    check[n] = testing
+    check[n] = pd.DataFrame()
+    for i in page_no:
+        driver.get('http://www.nfl.com/stats/categorystats?tabSeq=1&season=2019&seasonType=REG&experience=&Submit=Go&archive=false&conference=null&d-447263-p={}&statisticPositionCategory={}&qualified=false'.format(i, n))
+        pages = pd.read_html(driver.find_element_by_class_name('data-table1').get_attribute('outerHTML'))[0]
+        if pages.equals(end) == False:
+            check[n] = check[n].append(pages, ignore_index = True)
+        else:
+            break
