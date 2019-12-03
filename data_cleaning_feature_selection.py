@@ -33,14 +33,14 @@ def summarize(pos, num):
         sns.set(font_scale = 1)
         plt.tight_layout()
         plt.show()
-        #posave.savefig(r'C:\Users\lanzo\Documents\Data Analytics\Practice\Web_crawlers\nfl_crawler\player_stats\caps\top_player.png', dpi = 5000)
+        #posave.savefig(top_player.png', dpi = 5000)
     
     def box(num):
         for i in num.columns:
             #numsave = plt.gcf()
             num.boxplot(column = i, grid = False, fontsize = 18)
             plt.figure(figsize=(10,10))
-            #numsave.savefig(r'C:\Users\lanzo\Documents\Data Analytics\Practice\Web_crawlers\nfl_crawler\player_stats\caps\{}bar.png'.format(i))
+            #numsave.savefig({}bar.png'.format(i))
             plt.show()
         
     print(pos.describe())
