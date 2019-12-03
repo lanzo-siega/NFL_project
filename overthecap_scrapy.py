@@ -32,4 +32,3 @@ class OverthecapSpider(scrapy.Spider):
             
             yield scraped_info
             
-           
