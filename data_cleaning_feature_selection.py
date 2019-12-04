@@ -2,17 +2,17 @@
 
 def valcheck(df):
     print('Shape: ', df.shape)
-    print('Threshold (round up): ', round(len(df.index) * 0.6))
+    print('Threshold (round up): ', round(len(df.index) * 0.6)) #if zero, negative, or NA values are present in 60% of attribute, it is treated or removed
     print("Zero Values: ", '\n', df.select_dtypes(include=[np.number]).eq(0).sum())
     print("Negative Values: ", '\n', df.select_dtypes(include=[np.number]).lt(0).sum())
     print("NA Values: ", '\n', df.select_dtypes(include=[np.number]).isna().sum())
     
-def to_num(df, bunch):
+def to_num(df, bunch): #converts '--' values in a list of columns (bunch) to NA, then converts those columns to numeric.
     for i in bunch:
         df.replace(r'--', np.nan, inplace=True)
         df[i] = pd.to_numeric(df[i])
         
-def navert(df):
+def navert(df): #checks each numeric column for NA values and imputes the mean of that column on the NA value
     rdf = df.select_dtypes(include=[np.number])
     for i in rdf:
         if df[i].isnull().values.any() == True:
@@ -21,8 +21,10 @@ def navert(df):
             pass
             
 def summarize(pos, num):
+    #num is a dataframe of all the numeric attributes in the position. it is often assigned as
+    #num = pos.select_dtypes(include=[np.number])
     
-    def valgraph(pos):
+    def valgraph(pos): #graphs the top 10 highest paid player in that position
         #posave = plt.gcf()
         posgroup = pos.groupby('Player', as_index = False).mean().head(10)
         pteam = sns.barplot(x='Player', y='TotalValue', data = posgroup)
@@ -33,14 +35,14 @@ def summarize(pos, num):
         sns.set(font_scale = 1)
         plt.tight_layout()
         plt.show()
-        #posave.savefig(top_player.png', dpi = 5000)
+        #posave.savefig(top_player.png', dpi = 5000) #this saves the graph as a png file
     
-    def box(num):
+    def box(num): #creates a boxplot for every numeric attribute in that position
         for i in num.columns:
             #numsave = plt.gcf()
             num.boxplot(column = i, grid = False, fontsize = 18)
             plt.figure(figsize=(10,10))
-            #numsave.savefig({}bar.png'.format(i))
+            #numsave.savefig({}bar.png'.format(i)) this saves the boxplot of each attribute as separate png files
             plt.show()
         
     print(pos.describe())
@@ -96,7 +98,7 @@ def unisel(feature,target, data):
     dfcolumns = pd.DataFrame(feature.columns) #concat two dataframes for better visualization 
     featureScores = pd.concat([dfcolumns,dfscores],axis=1)
     featureScores.columns = ['Stat','Score']  #naming the dataframe columns
-    print(featureScores.nlargest(5,'Score'))  #print 10 best features
+    print(featureScores.nlargest(5,'Score'))  #print 5 best features
     
     stat = featureScores.nlargest(5,'Score')
     stat.reset_index(inplace=True)
@@ -135,7 +137,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 def pcafunc(feature, target):
-    global X_train, X_test, y_train, y_test 
+    global X_train, X_test, y_train, y_test #the train-test sets are global so I can easily refer to these in my prediction models
     X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size = 0.3, random_state = 0)
     
     sc = StandardScaler()
